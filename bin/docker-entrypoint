@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+# Enable jemalloc for reduced memory usage and latency
+if [ -z "${LD_PRELOAD+x}" ]; then
+  LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
+  export LD_PRELOAD
+fi
+
+# Run db:prepare if the command includes 'rails server' or 'thrust ... rails server'
+if [[ "$*" =~ "rails server" || "$*" =~ "thrust.*rails server" ]]; then
+  ./bin/rails db:prepare
+fi
+
+exec "$@"
