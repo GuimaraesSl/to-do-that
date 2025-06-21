@@ -1,80 +1,90 @@
 # syntax=docker/dockerfile:1
-# check=error=true
 
 ARG RUBY_VERSION=3.4.4
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+FROM ruby:${RUBY_VERSION}-slim AS base
 
 WORKDIR /rails
 
-# Install base packages
+# Variáveis de ambiente globais
+ENV BUNDLE_PATH="/usr/local/bundle" \
+    PATH="/usr/local/bundle/bin:$PATH"
+
+# Instala pacotes básicos do sistema + Node.js
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client nodejs npm && \
+    apt-get install --no-install-recommends -y \
+    curl libjemalloc2 libvips postgresql-client nodejs npm && \
+    npm install -g yarn && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install Node.js dependencies for Tailwind
-RUN npm install -g yarn
-
-# Throw-away build stage
+# Etapa de build das dependências e precompilação
 FROM base AS build
 
-# Install build dependencies
+# Instala dependências de build para gems nativas
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config && \
+    apt-get install --no-install-recommends -y \
+    build-essential git libpq-dev libyaml-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install gems
+# Copia arquivos do bundle e instala as gems
 COPY Gemfile Gemfile.lock ./
-ARG RAILS_ENV=development
-ENV RAILS_ENV=$RAILS_ENV \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development:test" \
-    BUNDLE_DEPLOYMENT="1"
-RUN if [ "$RAILS_ENV" = "production" ]; then \
-      bundle config set without 'development test'; \
-      bundle install && \
-      rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git; \
-    else \
-      bundle install; \
-    fi && \
-    bundle exec bootsnap precompile --gemfile
 
-# Copy application code
+ARG RAILS_ENV=development
+ENV RAILS_ENV=$RAILS_ENV
+
+RUN if [ "$RAILS_ENV" = "production" ]; then \
+    bundle config set without 'development test'; \
+    bundle install --deployment; \
+  else \
+    bundle install; \
+  fi && \
+  bundle exec bootsnap precompile --gemfile
+
+# Copia o restante do app
 COPY . .
 
-# Precompile bootsnap
+# Garante permissões corretas
+RUN chmod +x ./bin/*
+
+# Precompila diretórios do bootsnap
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompile assets for production
+# Precompila os assets caso seja produção
 RUN if [ "$RAILS_ENV" = "production" ]; then \
-      SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile; \
+      SECRET_KEY_BASE=dummydummydummydummydummydummydummydummy \
+      ./bin/rails assets:precompile; \
     fi
 
-# Final stage
+# Etapa final (imagem de execução)
 FROM base
 
-# Copy built artifacts
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
+# Reaplica variáveis de ambiente
+ENV BUNDLE_PATH="/usr/local/bundle" \
+    PATH="/usr/local/bundle/bin:$PATH"
 
-# Create non-root user
+# Copia os arquivos do app e as gems da imagem de build
+COPY --from=build --chown=rails:rails /rails /rails
+COPY --from=build --chown=rails:rails /usr/local/bundle /usr/local/bundle
+
+# Cria usuário não-root
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER 1000:1000
+    chown -R rails:rails /rails /usr/local/bundle
 
-# Entrypoint for database setup
+USER rails
+
+# Configura o entrypoint customizado
 COPY --chown=rails:rails bin/docker-entrypoint /rails/bin/docker-entrypoint
 RUN chmod +x /rails/bin/docker-entrypoint
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Expose port (configurable via PORT env var)
+# Porta padrão do servidor
 ARG PORT=3000
 ENV PORT=$PORT
 EXPOSE $PORT
 
-# Start server (development uses Puma, production uses Thruster)
+# Comando padrão: roda Puma em dev ou Thruster em prod
 CMD if [ "$RAILS_ENV" = "production" ]; then \
       ./bin/thrust ./bin/rails server -b 0.0.0.0 -p $PORT; \
     else \
-      bundle exec rails server -b 0.0.0.0 -p $PORT; \
+      ./bin/rails server -b 0.0.0.0 -p $PORT; \
     fi
