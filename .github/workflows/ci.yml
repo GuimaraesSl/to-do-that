@@ -74,14 +74,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22.x'
-
-      - name: Install JS dependencies
-        run: npm install
-
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
