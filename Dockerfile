@@ -1,24 +1,25 @@
 # syntax=docker/dockerfile:1
 
 ARG RUBY_VERSION=3.4.4
-FROM ruby:${RUBY_VERSION} AS base
+FROM ruby:${RUBY_VERSION}-slim AS base
 
 WORKDIR /rails
 
 # Variáveis de ambiente globais
 ENV BUNDLE_PATH="/usr/local/bundle" \
-    PATH="/usr/local/bundle/bin:$PATH"
+    PATH="/usr/local/bundle/bin:$PATH" \
+    RAILS_ENV="production"
 
-# Instala pacotes básicos do sistema
+# Instala pacotes básicos para produção
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
-    curl libjemalloc2 libvips postgresql-client nodejs yarn && \
+    curl libjemalloc2 libvips postgresql-client nodejs && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Etapa de build das dependências e precompilação
 FROM base AS build
 
-# Instala dependências de build para gems nativas
+# Instala dependências de build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
     build-essential libpq-dev libyaml-dev pkg-config && \
@@ -26,36 +27,24 @@ RUN apt-get update -qq && \
 
 # Copia arquivos do bundle e instala as gems
 COPY Gemfile Gemfile.lock ./
-
-ARG RAILS_ENV=development
-ENV RAILS_ENV=$RAILS_ENV
-
-RUN if [ "$RAILS_ENV" = "production" ]; then \
-      bundle config set without 'development test'; \
-      bundle install --deployment; \
-    else \
-      bundle install; \
-    fi && \
+RUN bundle config set without 'development test' && \
+    bundle install --deployment && \
     bundle exec bootsnap precompile --gemfile
 
 # Copia o restante do app
 COPY . .
 
-# Garante permissões corretas
-RUN chmod +x ./bin/*
-
-# Precompila os assets apenas para produção
-RUN if [ "$RAILS_ENV" = "production" ]; then \
-      SECRET_KEY_BASE=dummydummydummydummydummydummydummydummy \
-      ./bin/rails assets:precompile; \
-    fi
+# Garante permissões corretas e precompila assets
+RUN chmod +x ./bin/* && \
+    SECRET_KEY_BASE=dummydummydummydummydummydummydummydummy ./bin/rails assets:precompile
 
 # Etapa final (imagem de execução)
 FROM base AS final
 
 # Reaplica variáveis de ambiente
 ENV BUNDLE_PATH="/usr/local/bundle" \
-    PATH="/usr/local/bundle/bin:$PATH"
+    PATH="/usr/local/bundle/bin:$PATH" \
+    RAILS_ENV="production"
 
 # Copia os arquivos do app e as gems da imagem de build
 COPY --from=build --chown=rails:rails /rails /rails
@@ -78,5 +67,5 @@ ARG PORT=3000
 ENV PORT=$PORT
 EXPOSE $PORT
 
-# Comando padrão: roda Puma
+# Comando padrão: roda Puma em produção
 CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "$PORT"]

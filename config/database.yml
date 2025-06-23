@@ -1,34 +1,22 @@
-# default: &default
-#   adapter: postgresql
-#   encoding: unicode
-#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-#   url: <%= ENV['DATABASE_URL'] %>
-
-# development:
-#   <<: *default
-#   database: todothat_development
-
-# test:
-#   <<: *default
-#   database: todothat_test
-
-# production:
-#   <<: *default
-#   database: todothat_production
-
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: 5
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: postgres
   password: postgres
-  host: localhost  # Conecta ao Docker via host local
-  port: 5432      # Porta mapeada pelo docker-compose
 
 development:
   <<: *default
+  host: localhost
+  port: 5432
   database: todothat_development
 
 test:
   <<: *default
-  database: todothat_test  
+  host: localhost
+  port: 5432
+  database: todothat_test
+
+production:
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>  # Google Cloud usa DATABASE_URL
