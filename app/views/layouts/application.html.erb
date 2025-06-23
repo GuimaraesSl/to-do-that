@@ -21,9 +21,9 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="flex h-screen bg-red-100">
+    <%= render "layouts/sidebar" %>
+    <main class="flex-1 p-6 overflow-auto">
       <%= yield %>
     </main>
   </body>

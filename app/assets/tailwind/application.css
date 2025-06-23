@@ -5,3 +5,9 @@
 @source "../../../app/views/**/*";
 
 @plugin "./daisyui.js";
+
+@layer base {
+  body {
+    @apply bg-[#0e1217];
+  }
+}
