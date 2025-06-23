@@ -1,11 +1,19 @@
-<aside class="w-64 bg-base-100 shadow-lg h-full p-4">
-  <h2 class="text-2xl font-bold mb-6 text-center">ToDoThat</h2>
-  <ul class="menu menu-compact">
-    <li>
-      <%= link_to "Home", "#", class: "text-lg hover:bg-base-300 rounded" %>
-    </li>
-    <li>
-      <%= link_to "Board", "#", class: "text-lg hover:bg-base-300 rounded" %>
-    </li>
-  </ul>
+<aside class="bg-base-200 shadow-lg h-full transition-all duration-300 ease-in-out z-20 fixed top-0 left-0 overflow-hidden w-64"
+       data-controller="sidebar"
+       data-sidebar-target="sidebar">
+  <button class="btn btn-circle btn-ghost absolute top-4 left-4 text-xl z-30"
+          data-action="click->sidebar#toggle"
+          data-sidebar-target="toggle"
+          aria-label="Toggle sidebar"
+          aria-expanded="true"
+          data-turbo-permanent>
+    <i class="fas fa-arrow-left" data-sidebar-target="icon"></i>
+  </button>
+  <div class="mt-16" data-sidebar-target="content">
+    <h2 class="text-2xl font-bold mb-6 text-center">ToDoThat</h2>
+    <ul class="menu menu-compact">
+      <li><%= link_to "Home", home_path, class: "text-lg hover:bg-base-300 rounded" %></li>
+      <li><%= link_to "Board", board_path, class: "text-lg hover:bg-base-300 rounded" %></li>
+    </ul>
+  </div>
 </aside>
