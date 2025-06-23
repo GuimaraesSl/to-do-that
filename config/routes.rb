@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   get "/", to: "home#index", as: :home
   get "/board", to: "board#index", as: :board
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
