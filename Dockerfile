@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG RUBY_VERSION=3.4.4
-FROM ruby:${RUBY_VERSION}-slim AS base
+FROM ruby:${RUBY_VERSION} AS base
 
 WORKDIR /rails
 
@@ -9,11 +9,10 @@ WORKDIR /rails
 ENV BUNDLE_PATH="/usr/local/bundle" \
     PATH="/usr/local/bundle/bin:$PATH"
 
-# Instala pacotes básicos do sistema + Node.js
+# Instala pacotes básicos do sistema
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
-    curl libjemalloc2 libvips postgresql-client nodejs npm && \
-    npm install -g yarn && \
+    curl libjemalloc2 libvips postgresql-client nodejs yarn && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Etapa de build das dependências e precompilação
@@ -22,7 +21,7 @@ FROM base AS build
 # Instala dependências de build para gems nativas
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
-    build-essential git libpq-dev libyaml-dev pkg-config && \
+    build-essential libpq-dev libyaml-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copia arquivos do bundle e instala as gems
@@ -32,12 +31,12 @@ ARG RAILS_ENV=development
 ENV RAILS_ENV=$RAILS_ENV
 
 RUN if [ "$RAILS_ENV" = "production" ]; then \
-    bundle config set without 'development test'; \
-    bundle install --deployment; \
-  else \
-    bundle install; \
-  fi && \
-  bundle exec bootsnap precompile --gemfile
+      bundle config set without 'development test'; \
+      bundle install --deployment; \
+    else \
+      bundle install; \
+    fi && \
+    bundle exec bootsnap precompile --gemfile
 
 # Copia o restante do app
 COPY . .
@@ -45,17 +44,14 @@ COPY . .
 # Garante permissões corretas
 RUN chmod +x ./bin/*
 
-# Precompila diretórios do bootsnap
-RUN bundle exec bootsnap precompile app/ lib/
-
-# Precompila os assets caso seja produção
+# Precompila os assets apenas para produção
 RUN if [ "$RAILS_ENV" = "production" ]; then \
       SECRET_KEY_BASE=dummydummydummydummydummydummydummydummy \
       ./bin/rails assets:precompile; \
     fi
 
 # Etapa final (imagem de execução)
-FROM base
+FROM base AS final
 
 # Reaplica variáveis de ambiente
 ENV BUNDLE_PATH="/usr/local/bundle" \
@@ -82,9 +78,5 @@ ARG PORT=3000
 ENV PORT=$PORT
 EXPOSE $PORT
 
-# Comando padrão: roda Puma em dev ou Thruster em prod
-CMD if [ "$RAILS_ENV" = "production" ]; then \
-      ./bin/thrust ./bin/rails server -b 0.0.0.0 -p $PORT; \
-    else \
-      ./bin/rails server -b 0.0.0.0 -p $PORT; \
-    fi
+# Comando padrão: roda Puma
+CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "$PORT"]

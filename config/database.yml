@@ -1,8 +1,29 @@
+# default: &default
+#   adapter: postgresql
+#   encoding: unicode
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   url: <%= ENV['DATABASE_URL'] %>
+
+# development:
+#   <<: *default
+#   database: todothat_development
+
+# test:
+#   <<: *default
+#   database: todothat_test
+
+# production:
+#   <<: *default
+#   database: todothat_production
+
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  url: <%= ENV['DATABASE_URL'] %>
+  pool: 5
+  username: postgres
+  password: postgres
+  host: localhost  # Conecta ao Docker via host local
+  port: 5432      # Porta mapeada pelo docker-compose
 
 development:
   <<: *default
@@ -10,8 +31,4 @@ development:
 
 test:
   <<: *default
-  database: todothat_test
-
-production:
-  <<: *default
-  database: todothat_production
+  database: todothat_test  
