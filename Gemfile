@@ -10,7 +10,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 gem "devise", "~> 4.9"
 gem "jwt", "~> 2.6"
-gem "tailwindcss-rails", "~> 2.6"  # Mantém apenas esta gem
+gem "tailwindcss-rails"
 gem "faker"
 gem "omniauth"
 gem "omniauth-google-oauth2"
