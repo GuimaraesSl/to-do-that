@@ -7,59 +7,44 @@ WORKDIR /rails
 
 # Variáveis de ambiente globais
 ENV BUNDLE_PATH="/usr/local/bundle" \
-    PATH="/usr/local/bundle/bin:$PATH"
+    PATH="/usr/local/bundle/bin:$PATH" \
+    RAILS_ENV="production"
 
-# Instala pacotes básicos do sistema + Node.js
+# Instala pacotes básicos para produção
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
-    curl libjemalloc2 libvips postgresql-client nodejs npm && \
-    npm install -g yarn && \
+    curl libjemalloc2 libvips postgresql-client nodejs && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Etapa de build das dependências e precompilação
 FROM base AS build
 
-# Instala dependências de build para gems nativas
+# Instala dependências de build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
-    build-essential git libpq-dev libyaml-dev pkg-config && \
+    build-essential libpq-dev libyaml-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copia arquivos do bundle e instala as gems
 COPY Gemfile Gemfile.lock ./
-
-ARG RAILS_ENV=development
-ENV RAILS_ENV=$RAILS_ENV
-
-RUN if [ "$RAILS_ENV" = "production" ]; then \
-    bundle config set without 'development test'; \
-    bundle install --deployment; \
-  else \
-    bundle install; \
-  fi && \
-  bundle exec bootsnap precompile --gemfile
+RUN bundle config set without 'development test' && \
+    bundle install --deployment && \
+    bundle exec bootsnap precompile --gemfile
 
 # Copia o restante do app
 COPY . .
 
-# Garante permissões corretas
-RUN chmod +x ./bin/*
-
-# Precompila diretórios do bootsnap
-RUN bundle exec bootsnap precompile app/ lib/
-
-# Precompila os assets caso seja produção
-RUN if [ "$RAILS_ENV" = "production" ]; then \
-      SECRET_KEY_BASE=dummydummydummydummydummydummydummydummy \
-      ./bin/rails assets:precompile; \
-    fi
+# Garante permissões corretas e precompila assets
+RUN chmod +x ./bin/* && \
+    SECRET_KEY_BASE=dummydummydummydummydummydummydummydummy ./bin/rails assets:precompile
 
 # Etapa final (imagem de execução)
-FROM base
+FROM base AS final
 
 # Reaplica variáveis de ambiente
 ENV BUNDLE_PATH="/usr/local/bundle" \
-    PATH="/usr/local/bundle/bin:$PATH"
+    PATH="/usr/local/bundle/bin:$PATH" \
+    RAILS_ENV="production"
 
 # Copia os arquivos do app e as gems da imagem de build
 COPY --from=build --chown=rails:rails /rails /rails
@@ -82,9 +67,5 @@ ARG PORT=3000
 ENV PORT=$PORT
 EXPOSE $PORT
 
-# Comando padrão: roda Puma em dev ou Thruster em prod
-CMD if [ "$RAILS_ENV" = "production" ]; then \
-      ./bin/thrust ./bin/rails server -b 0.0.0.0 -p $PORT; \
-    else \
-      ./bin/rails server -b 0.0.0.0 -p $PORT; \
-    fi
+# Comando padrão: roda Puma em produção
+CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "$PORT"]

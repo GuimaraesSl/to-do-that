@@ -2,16 +2,21 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  url: <%= ENV['DATABASE_URL'] %>
+  username: postgres
+  password: postgres
 
 development:
   <<: *default
+  host: localhost
+  port: 5432
   database: todothat_development
 
 test:
   <<: *default
+  host: localhost
+  port: 5432
   database: todothat_test
 
 production:
   <<: *default
-  database: todothat_production
+  url: <%= ENV['DATABASE_URL'] %>  # Google Cloud usa DATABASE_URL

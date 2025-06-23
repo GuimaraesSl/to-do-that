@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>To-Do List - <%= yield(:title) %></title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tags %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body class="flex items-center justify-center min-h-screen">
+    <div class="card w-full max-w-md bg-base-100 shadow-xl p-6">
+      <%= yield %>
+    </div>
+  </body>
+</html>
