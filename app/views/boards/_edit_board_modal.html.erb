@@ -2,10 +2,8 @@
 
 <div class="modal">
   <div class="modal-box relative" data-controller="banner-preview">
-    <!-- Botão para fechar o modal -->
     <label for="edit-board-modal-<%= board.id %>" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
 
-    <!-- Conteúdo -->
     <h3 class="font-bold text-lg mb-4">Editar quadro</h3>
     <%= render partial: "boards/form", locals: { board: board, modal_id: "edit-board-modal-#{board.id}" } %>
   </div>
