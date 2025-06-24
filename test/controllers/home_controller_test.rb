@@ -2,10 +2,9 @@ require "test_helper"
 
 class HomeControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
-    user = create(:user)
+    user = FactoryBot.create(:user)
     sign_in user
-
-    get home_url
+    get root_path
     assert_response :success
   end
 end

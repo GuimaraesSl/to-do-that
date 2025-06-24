@@ -12,6 +12,8 @@ class ActiveSupport::TestCase
   # Ativa os métodos como `create(:user)`
   include FactoryBot::Syntax::Methods
 
+  include Devise::Test::IntegrationHelpers
+
   # Adicione mais helpers para testes unitários aqui
 end
 
