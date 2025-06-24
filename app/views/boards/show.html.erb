@@ -1,0 +1,47 @@
+<div class="full-width-container">
+  <div class="flex flex-col gap-4 pt-4 mb-4">
+    <div class="w-full h-32 md:h-48 overflow-hidden">
+      <% if @board.banner.present? %>
+        <img  src="data:image/*;base64,<%= @board.banner %>"
+              alt="<%= @board.name %>"
+              class="w-full h-full object-cover rounded-lg">
+      <% else %>
+        <%= image_tag "default_image.jpg",
+                      alt: @board.name,
+                      class: "w-full h-full object-cover rounded-lg" %>
+      <% end %>
+    </div>
+    <header class="py-2">
+      <h1 class="text-2xl font-bold text-gray-800"><%= @board.name %></h1>
+    </header>
+    <div class="flex items-end md:justify-between flex-col-reverse md:flex-row gap-3">
+      <div data-controller="column-creator" class="flex justify-between items-center">
+        <div id="column-creator-actions" data-column-creator-target="button" class="flex flex-col md:flex-row gap-4">
+          <button class="btn flex btn-accent gap-2" 
+                  data-action="click->column-creator#showForm"
+            >
+            <i class="fa-solid fa-plus"></i>
+            <p>Nova coluna</p>
+          </button>
+        </div>
+        <div class="hidden" data-column-creator-target="form">
+          <%
+=begin%>
+ <%= render 'columns/form', board: @board %> 
+<%
+=end%>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="board-columns" 
+    class="flex flex-col md:flex-row gap-4 overflow-x-auto pb-4 w-full" 
+    data-controller="horizontal-scroll"
+    style="scrollbar-width: thin;">
+    <%
+=begin%>
+ <%= render partial: 'columns/column', collection: @board.columns.order(:position) %> 
+<%
+=end%>
+  </div>
+</div>
