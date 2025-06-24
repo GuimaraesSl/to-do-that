@@ -32,6 +32,7 @@ group :development, :test do
   gem "brakeman", require: false
   gem "rubocop-rails-omakase", require: false
   gem "bundler-audit", require: false
+  gem "factory_bot_rails"
 end
 
 group :development do

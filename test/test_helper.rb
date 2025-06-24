@@ -2,14 +2,20 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 
-module ActiveSupport
-  class TestCase
-    # Run tests in parallel with specified workers
-    parallelize(workers: :number_of_processors)
+class ActiveSupport::TestCase
+  # Run tests in parallel with specified workers
+  parallelize(workers: :number_of_processors)
 
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    fixtures :all
+  # Remove fixtures (recomendado se for usar só FactoryBot)
+  # fixtures :all
 
-    # Add more helper methods to be used by all tests here...
-  end
+  # Ativa os métodos como `create(:user)`
+  include FactoryBot::Syntax::Methods
+
+  # Adicione mais helpers para testes unitários aqui
+end
+
+class ActionDispatch::IntegrationTest
+  # Para autenticação com Devise nos testes de integração
+  include Devise::Test::IntegrationHelpers
 end
