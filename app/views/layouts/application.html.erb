@@ -18,7 +18,7 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="flex h-screen" data-theme="custom-dark">
+  <body class="flex h-screen bg-base-300" data-theme="custom-dark">
     <%= render "layouts/sidebar" %>
     <main class="flex-1 p-6 overflow-auto transition-all duration-300 ease-in-out ml-64" id="main-content">
       <%= yield %>

@@ -1,0 +1,16 @@
+<input
+  type="checkbox"
+  id="new-board-modal"
+  class="modal-toggle"
+  <%= 'checked' if board.errors.any? %>
+/>
+
+<div class="modal">
+  <div class="modal-box" data-controller="banner-preview">
+    <label for="new-board-modal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+
+    <h3 class="font-bold text-lg mb-4">Novo quadro</h3>
+    <%= render partial: "boards/form",
+               locals: { board: board, modal_id: "new-board-modal" } %>
+  </div>
+</div>
