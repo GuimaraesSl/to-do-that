@@ -65,10 +65,9 @@ class TasksController < ApplicationController
     end
 
     respond_to do |format|
-      format.turbo_stream # ➜ Isso vai renderizar o `move.turbo_stream.erb` automaticamente
+      format.turbo_stream
       format.json { head :ok }
     end
-
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
@@ -84,6 +83,6 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description, :difficulty, :due_date, :position, tag_ids: [])
+    params.require(:task).permit(:title, :description, :difficulty, :priority, :due_date, :position, tag_ids: [])
   end
 end

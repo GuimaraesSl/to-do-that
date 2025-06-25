@@ -12,23 +12,21 @@ class Task < ApplicationRecord
             presence: true,
             numericality: {
               only_integer: true,
-              greater_than_or_equal_to: 1
+              greater_than_or_equal_to: 1,
+              less_than_or_equal_to: 5
+            }
+  validates :priority,
+            presence: true,
+            numericality: {
+              only_integer: true,
+              greater_than_or_equal_to: 1,
+              less_than_or_equal_to: 5
             }
   validates :position, presence: true, numericality: { only_integer: true }
 
   default_scope { order(position: :asc) }
 
   before_validation :set_position_if_nil, on: :create
-
-  DIFFICULTY_LABELS = {
-    1 => "S",
-    2 => "M",
-    3 => "L"
-  }
-
-  def difficulty_label
-    DIFFICULTY_LABELS[difficulty] || "Desconhecido"
-  end
 
   def due_date_formatted
     due_date&.strftime("%d/%m/%Y %H:%M")
