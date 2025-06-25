@@ -7,14 +7,13 @@ class Task < ApplicationRecord
   has_many :taggings, as: :taggable, dependent: :destroy
   has_many :tags, through: :taggings
 
+  validates :title, presence: true
   validates :difficulty,
             presence: true,
             numericality: {
               only_integer: true,
               greater_than_or_equal_to: 1
             }
-
-  validates :title, presence: true
   validates :position, presence: true, numericality: { only_integer: true }
 
   default_scope { order(position: :asc) }

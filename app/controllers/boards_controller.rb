@@ -1,20 +1,19 @@
 class BoardsController < ApplicationController
-  before_action :set_board, only: [ :show, :update, :destroy ]
+  before_action :set_board, only: %i[show update destroy]
 
   def index
-    @boards = Board.all.includes(:tags).all
+    @boards = current_user.boards.includes(:tags)
   end
 
   def show
-    @board = Board.find(params[:id])
   end
 
   def create
-    @board = Board.new(board_params)
+    @board = current_user.boards.new(board_params)
     if @board.save
       redirect_to boards_path, notice: "Board criado com sucesso."
     else
-      @boards = Board.includes(:tags).all
+      @boards = current_user.boards.includes(:tags)
       render :index, status: :unprocessable_entity
     end
   end
@@ -35,7 +34,7 @@ class BoardsController < ApplicationController
   private
 
   def set_board
-    @board = Board.find(params[:id])
+    @board = current_user.boards.find(params[:id])
   end
 
   def board_params

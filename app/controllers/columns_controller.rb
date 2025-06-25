@@ -1,13 +1,11 @@
 class ColumnsController < ApplicationController
   before_action :set_board
-  before_action :set_column, only: [ :update, :destroy ]
+  before_action :set_column, only: %i[update destroy]
 
   def create
     @column = @board.columns.build(column_params)
-
     if @column.save
       @previous_done_column = @board.columns.where.not(id: @column.id).order(:position).last
-
       respond_to do |format|
         format.html { redirect_to board_path(@board) }
         format.turbo_stream
@@ -16,7 +14,6 @@ class ColumnsController < ApplicationController
       redirect_to board_path(@board), alert: "Erro ao criar coluna"
     end
   end
-
 
   def update
     if @column.update(column_params)
@@ -37,12 +34,12 @@ class ColumnsController < ApplicationController
   private
 
   def set_board
-    @board = Board.find(params[:board_id])
+    @board = current_user.boards.find(params[:board_id])
   end
 
   def set_column
     @column = @board.columns.find(params[:id])
-    @is_done_column = (@column == @board.columns.order(:position).last)
+    @is_done_column = @column == @board.columns.order(:position).last
   end
 
   def column_params

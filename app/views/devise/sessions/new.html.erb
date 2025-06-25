@@ -1,0 +1,29 @@
+<div class="card w-full max-w-md bg-base-100 shadow-xl p-8">
+  <h2 class="text-3xl font-bold text-center mb-6">Login</h2>
+
+  <%= form_with model: resource, url: session_path(resource_name), local: true, class: "space-y-6" do |f| %>
+    <div>
+      <%= f.label :email, class: "label text-sm" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-bordered w-full" %>
+    </div>
+
+    <div>
+      <%= f.label :password, class: "label text-sm" %>
+      <%= f.password_field :password, autocomplete: "current-password", class: "input input-bordered w-full" %>
+    </div>
+
+    <div class="form-control mt-4">
+      <%= f.submit "Entrar", class: "btn btn-primary w-full" %>
+    </div>
+  <% end %>
+
+  <div class="divider my-6">ou</div>
+
+  <%= button_to user_google_oauth2_omniauth_authorize_path, method: :post, class: "btn btn-outline btn-info w-full flex items-center justify-center gap-2", data: { turbo: false } do %>
+    <i class="fa-brands fa-google"></i> Entrar com Google
+  <% end %>
+
+  <p class="text-center text-sm mt-6">
+    Não tem conta? <%= link_to "Registrar", new_user_registration_path, class: "link link-primary" %>
+  </p>
+</div>
