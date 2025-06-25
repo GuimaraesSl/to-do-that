@@ -26,6 +26,7 @@ gem "solid_cable"
 gem "bootsnap", require: false
 gem "kamal", require: false
 gem "thruster", require: false
+gem "acts_as_list", "~> 1.0"
 
 group :development, :test do
   gem "debug", require: "debug/prelude"

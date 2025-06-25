@@ -6,6 +6,8 @@ class ColumnsController < ApplicationController
     @column = @board.columns.build(column_params)
 
     if @column.save
+      @previous_done_column = @board.columns.where.not(id: @column.id).order(:position).last
+
       respond_to do |format|
         format.html { redirect_to board_path(@board) }
         format.turbo_stream
@@ -14,6 +16,7 @@ class ColumnsController < ApplicationController
       redirect_to board_path(@board), alert: "Erro ao criar coluna"
     end
   end
+
 
   def update
     if @column.update(column_params)

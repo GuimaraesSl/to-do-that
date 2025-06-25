@@ -1,0 +1,40 @@
+<%= form_with(model: [column, task], data: { turbo_frame: dom_id(task), task_id: task.id }) do |form| %>
+  <div class="modal-box w-full max-w-5xl bg-base-100 p-6 rounded-lg shadow-lg">
+    <h3 class="font-bold text-xl mb-4 text-primary">Editar Tarefa</h3>
+    <div id="edit_task_errors"></div>
+
+    <div class="form-control mb-4">
+      <%= form.label :title, class: "label" %>
+      <%= form.text_field :title, class: "input input-bordered w-full" %>
+    </div>
+
+    <div class="form-control mb-4">
+      <%= form.label :description, class: "label" %>
+      <%= form.text_area :description, class: "textarea textarea-bordered w-full h-24" %>
+    </div>
+
+    <div class="form-control mb-4">
+      <%= form.label :difficulty, class: "label" %>
+      <%= form.select :difficulty, options_for_select((1..3).map { |n| [Task::DIFFICULTY_LABELS[n], n] }, task.difficulty), { include_blank: true }, class: "select select-bordered w-full" %>
+    </div>
+
+    <div class="form-control mb-4">
+      <%= form.label :due_date, class: "label" %>
+      <%= form.datetime_field :due_date, class: "input input-bordered w-full" %>
+    </div>
+
+    <div class="modal-action">
+      <%= form.submit "Salvar", class: "btn btn-primary" %>
+      <button type="button" class="btn btn-ghost" data-action="click->modal#close">Cancelar</button>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener('turbo:frame-render', function(e) {
+    if (e.target.matches(`#${dom_id(task)}`)) {
+      const form = document.querySelector(`form[data-task-id][data-turbo-frame="${dom_id(task)}"]`);
+      const taskId = form ? form.dataset.taskId : null;
+    }
+  });
+</script>
