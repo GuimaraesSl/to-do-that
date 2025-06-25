@@ -21,6 +21,7 @@
   <body class="flex h-screen bg-base-300" data-theme="custom-dark">
     <%= render "layouts/sidebar" %>
     <main class="flex-1 p-6 overflow-auto transition-all duration-300 ease-in-out ml-64" id="main-content">
+      <div id="task_modal_container"></div>
       <%= yield %>
     </main>
   </body>

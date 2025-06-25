@@ -1,0 +1,13 @@
+<div class="flex flex-col p-2 gap-2 tasks-container h-full" 
+   id="column_<%= column.id %>_tasks"
+   data-column-id="<%= column.id %>"
+   data-controller="sortable"
+   data-sortable-group-value="tasks"
+   data-sortable-url-value="<%= column_reorder_column_tasks_path(column) %>"
+   data-sortable-column-id-value="<%= column.id %>">
+  <% if column.tasks.any? %>
+    <%= render partial: 'tasks/task', collection: column.tasks.order(:position) %>
+  <% else %>
+    <%= render 'tasks/empty_placeholder', column: column %>
+  <% end %>
+</div>
