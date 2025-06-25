@@ -5,7 +5,7 @@
        data-column-id="<%= @column.id %>"
        data-controller="sortable"
        data-sortable-group-value="tasks"
-       data-sortable-url-value="<%= reorder_column_tasks_path(@column) %>"
+       data-sortable-url-value="<%= move_column_task_path(@column, @task) %>"
        data-sortable-column-id-value="<%= @column.id %>">
       <%= render partial: 'tasks/task', locals: { task: @task } %>
     </div>

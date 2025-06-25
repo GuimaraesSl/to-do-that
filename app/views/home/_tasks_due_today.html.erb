@@ -1,0 +1,40 @@
+<div class="bg-base-100 p-8 rounded-lg shadow-sm max-w-2xl w-full h-full">
+  <h2 class="text-lg font-bold mb-4">Tarefas Para Hoje</h2>
+
+  <% if tasks.any? %>
+    <ul class="space-y-4">
+      <% tasks.each do |task| %>
+        <li id="home_task_<%= dom_id(task) %>" class="flex items-start gap-2">
+          <form method="post"
+                action="<%= move_board_column_task_path(task.column.board, task.column, task) %>"
+                data-turbo="true"
+                data-turbo-stream>
+            <%= hidden_field_tag "_method", "patch" %>
+            <%= hidden_field_tag :target_column_id, task.column.board.columns.order(:id).last.id %>
+            <%= hidden_field_tag :new_position, task.column.board.columns.order(:id).last.tasks.count %>
+            <%= hidden_field_tag :from_home, true %>
+
+            <button type="submit"
+                    class="checkbox checkbox-sm mt-1"
+                    title="Marcar como concluída">
+            </button>
+          </form>
+
+          <div>
+            <div class="font-medium break-words"><%= task.title %></div>
+            <div class="text-sm text-gray-500">
+              <%= task.due_date.strftime("%H:%M") %>
+            </div>
+            <div class="flex flex-wrap gap-1 mt-1">
+              <% task.tags.each do |tag| %>
+                <span class="badge badge-sm"><%= tag.name %></span>
+              <% end %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-sm text-gray-500">Nenhuma tarefa agendada para hoje.</p>
+  <% end %>
+</div>

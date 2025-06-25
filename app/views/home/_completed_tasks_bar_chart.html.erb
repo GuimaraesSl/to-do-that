@@ -1,17 +1,17 @@
 <% max_tasks = data.map { |item| item[:count] }.max.to_f %>
 
 <div class="max-w-2xl bg-base-100 p-8 rounded-lg shadow-sm h-full w-full">
-  <h1 class="text-lg font-bold mb-6">Boards mais produtivos</h1>
+  <h1 class="text-lg font-bold mb-6">Meus Boards</h1>
 
   <div class="space-y-4">
     <% data.each_with_index do |board, index| %>
-      <% percent = max_tasks.zero? ? 0 : ((board[:count] / max_tasks) * 100).round %>
+      <% percent = ((board[:count].to_f / board[:total]) * 100).round %>
       <% color = %w[bg-blue-600 bg-green-500 bg-purple-500 bg-yellow-500 bg-pink-500 bg-red-500][index % 6] %>
 
       <div>
-        <div class="flex justify-between text-sm mb-1">
-          <span><%= board[:name] %></span>
-          <span><%= board[:count] %> tarefas concluída(s)</span>
+        <div class="flex justify-between items-start text-sm mb-1 w-full">
+          <span class="text-left break-words max-w-[40%]"><%= board[:name] %></span>
+          <span class="text-right whitespace-nowrap"><%= board[:count] %>/<%= board[:total] %> tarefas concluídas</span>
         </div>
         <div class="w-full bg-gray-300 rounded-full h-4">
           <div class="<%= color %> h-4 rounded-full" style="width: <%= percent %>%"></div>
