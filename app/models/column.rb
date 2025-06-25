@@ -24,8 +24,6 @@ class Column < ApplicationRecord
   end
 
   def promote_last_column_if_needed
-    if is_done_column?
-      board.promote_last_column_to_done!
-    end
+    board.promote_last_column_to_done! if is_done_column?
   end
 end

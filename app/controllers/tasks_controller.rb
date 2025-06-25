@@ -1,12 +1,10 @@
 class TasksController < ApplicationController
   before_action :set_column
-  before_action :set_task, only: [ :show, :update, :destroy, :move ]
+  before_action :set_task, only: %i[show update destroy move]
 
   def create
     @task = @column.tasks.build(task_params)
-
-    last_column = @column.board.columns.order(:id).last
-    @task.concluded_at = Time.current if @column == last_column
+    @task.concluded_at = Time.current if @column == @column.board.columns.order(:id).last
 
     if @task.save
       respond_to do |format|
@@ -16,11 +14,7 @@ class TasksController < ApplicationController
     else
       respond_to do |format|
         format.turbo_stream {
-          render turbo_stream: turbo_stream.replace(
-            "new_task_errors",
-            partial: "tasks/errors",
-            locals: { task: @task }
-          )
+          render turbo_stream: turbo_stream.replace("new_task_errors", partial: "tasks/errors", locals: { task: @task })
         }
         format.html { redirect_to board_path(@column.board), alert: "Erro ao criar tarefa" }
       end
@@ -56,7 +50,7 @@ class TasksController < ApplicationController
 
   def move
     @old_column = @task.column
-    @new_column = Column.find(params[:target_column_id])
+    @new_column = current_user.boards.find(@old_column.board_id).columns.find(params[:target_column_id])
     new_pos = params[:new_position].to_i + 1
 
     Task.transaction do
@@ -64,10 +58,7 @@ class TasksController < ApplicationController
         @task.insert_at(new_pos)
       else
         @task.column = @new_column
-
-        last_column = @new_column.board.columns.order(:id).last
-        @task.concluded_at = (@new_column == last_column) ? Time.current : nil
-
+        @task.concluded_at = @new_column == @new_column.board.columns.order(:id).last ? Time.current : nil
         @task.save!
         @task.insert_at(new_pos)
       end
@@ -81,17 +72,14 @@ class TasksController < ApplicationController
     render json: { error: e.message }, status: :unprocessable_entity
   end
 
-
   private
 
   def set_column
-    @column = Column.find(params[:column_id])
-    puts "Column ID: #{@column.id}"
+    @column = current_user.boards.joins(:columns).merge(Column.where(id: params[:column_id])).first.columns.find(params[:column_id])
   end
 
   def set_task
-    @task = Task.find(params[:id])
-    puts "Task ID: #{@task.id}"
+    @task = @column.tasks.find(params[:id])
   end
 
   def task_params
