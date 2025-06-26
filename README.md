@@ -1,29 +1,19 @@
-<h2 align="center">
-  ToDoThat - Sua Vida Mais Fácil
-</h2>
-
-<hr>
+# ToDoThat - Sua Vida Mais Fácil
 
 ## Sumário
-1. [O que é o ToDoThat?](#descrição)
-2. [Decisões Técnicas](#decisões-técnicas)
-3. [Diferenciais](#diferenciais)
-4. [Requisitos](#requisitos)
-   - [Funcionalidades Principais](#funcionalidades-principais)
-   - [Quadros de Tarefas](#quadros-de-tarefas)
-   - [Você e Seus Resultados](#resultados)
-   - [Usuário e Autenticação](#usuário-e-autenticação)
-5. [Requisitos em Formato de Imagem e Tutorial de uso da Aplicação](#requisitos-em-formato-de-imagem-e-tutorial-de-uso-da-aplicação)
-6. [Considerações](#considerações)
-7. [Banco de Dados](#informações-de-banco-de-dados)
-8. [Decisões de Projeto e Práticas Utilizadas](#decisões-de-projeto-e-práticas-utilizadas)
-9. [Autores](#autores)
-10. [Agradecimentos](#agradecimentos)
-11. [Link da Aplicação](#link-da-aplicação)
+- [O que é o ToDoThat?](#o-que-é-o-todothat)
+- [Decisões Técnicas](#decisões-técnicas)
+- [Diferenciais](#diferenciais)
+- [Imagens](#imagens)
+- [Considerações](#considerações)
+- [Entidades do ToDoThat](#entidades-do-todothat)
+- [Autores](#autores)
+- [Agradecimentos](#agradecimentos)
+- [Link da Aplicação](#link-da-aplicação)
 
 ---
 
-## O que é o ToDoThat?
+## 💡 O que é o ToDoThat?
 
 O **ToDoThat** é um aplicativo de organização pessoal pensado para facilitar a sua rotina de maneira prática, visual e eficiente. 
 
@@ -38,65 +28,110 @@ A ideia central do ToDoThat é que você tenha controle e clareza sobre o que pr
 
 ---
 
-## Decisões Técnicas
+## 🛠️ Decisões Técnicas
 
-- **Linguagem Principal**: Ruby 3.4.4
-- **Framework**: Ruby on Rails 8.0.2
-- **Banco de Dados**: PostgreSQL
-- **Frontend**: TailwindCSS, DaisyUI
-- **Autenticação**: Devise + Omniauth
-- **Componentes da Hotwire**: Turbo + Stimulus
+- **Linguagem Principal**: [Ruby 3.4.4](https://www.ruby-lang.org/en/news/2024/11/26/ruby-3-4-4-released/)  
+- **Framework**: [Ruby on Rails 8.0.2](https://rubyonrails.org/2024/12/12/Rails-8-0-2-has-been-released)  
+- **Banco de Dados**: [PostgreSQL](https://www.postgresql.org/)  
+- **Frontend**: [TailwindCSS](https://tailwindcss.com/), [DaisyUI](https://daisyui.com/)  
+- **Autenticação**: [Devise](https://github.com/heartcombo/devise) + [Omniauth](https://github.com/omniauth/omniauth)  
+- **Componentes da Hotwire**: [Turbo](https://turbo.hotwired.dev/) + [Stimulus](https://stimulus.hotwired.dev/)  
 
 ---
 
-## Diferenciais
-O ToDoThat vai além de uma simples lista de tarefas. Ele oferece uma experiência completa de organização, planejamento e análise do seu dia a dia. Aqui estão alguns dos principais diferenciais da aplicação:
+## ✨ Diferenciais
 
-✅ Autenticação via Google
+✅ **Autenticação via Google**  
 Login rápido, seguro e sem complicações com integração à conta Google.
 
-🏷️ Tags personalizadas para tarefas
+🏷️ **Tags personalizadas para tarefas**  
 Crie e organize suas tarefas com tags totalmente personalizáveis, facilitando filtros e visualizações específicas.
 
-🧩 Quadros customizáveis
-Organize suas tarefas em diferentes quadros (boards) com colunas (estágios) ajustáveis, como "A Fazer", "Em Progresso", "Concluído", ou qualquer outro que você desejar.
+🧩 **Quadros customizáveis**  
+Organize suas tarefas em diferentes quadros com colunas ajustáveis como "A Fazer", "Em Progresso", "Concluído", ou qualquer outro que desejar.
 
-📅 Tarefas com data de vencimento e prioridade
+📅 **Tarefas com data de vencimento e prioridade**  
 Adicione prazos e defina níveis de prioridade para manter o foco no que realmente importa.
 
-📈 Resumo gráfico do seu progresso
+📈 **Resumo gráfico do seu progresso**  
 Acompanhe visualmente como anda sua produtividade com gráficos simples e intuitivos.
 
 ---
 
-## Considerações
+## 🖼️ Imagens
 
+![Dashboard](https://github.com/user-attachments/assets/0d5ff36e-bbb0-47aa-a027-fda153ee715d)  
+![Task View](https://github.com/user-attachments/assets/f9744de1-828c-44a2-95a9-25c97df3ed6c)  
+![Progress Chart](https://github.com/user-attachments/assets/c5b14a4c-a212-44af-9bf3-65cf7830c2f3)
 
 ---
 
+## 🧠 Considerações
+
+O ToDoThat foi construído com foco na organização pessoal prática, mas é altamente escalável e pode ser facilmente adaptado para equipes e contextos corporativos.
 
 ---
 
-## Decisões de Projeto e Práticas Utilizadas
+## 🗃️ Entidades do ToDoThat
 
-1. **Partial Views**
-   - Divisão das views para reaproveitamento e clareza
-2. **Service Objects**
-   - Regras de negócio encapsuladas fora dos controllers
-3. **Helpers**
-   - Funções reutilizáveis como `format_date`
-4. **Modularidade**
-   - Código dividido por responsabilidade funcional (ex: `cards/edit`)
-5. **Variáveis de Instância em Views**
-   - Redução da lógica direta nos templates `.html.erb`
-6. **Centralização de cores**
-   - Arquivo global de cores para facilitar customização
+### 👤 `users`
+- Armazena informações dos usuários: `email`, `full_name`, `avatar_url`, etc.  
+- Suporte a login via Google (`uid`, `provider`)  
+- Cada usuário → N boards
+
+---
+
+### 📋 `boards`
+- Quadro de organização que agrupa colunas e tarefas  
+- Atributos: `name`, `description`, `banner`, `user_id`  
+- Cada board → N columns
+
+---
+
+### 📁 `columns`
+- Representa estágios de tarefas em um board  
+- Campos: `name`, `position`, `is_done_column`  
+- Cada column → N tasks
+
+---
+
+### ✅ `tasks`
+- Tarefa em uma coluna com:  
+  `title`, `description`, `difficulty`, `priority`, `due_date`, `concluded_at`  
+- Relaciona-se com `column_id`  
+- Pode ter várias tags via associação polimórfica
+
+---
+
+### 🏷️ `tags`
+- Tags personalizadas: `title`, `color`  
+- Relacionamento polimórfico com outras entidades (ex: tarefas)
+
+---
+
+### 🔗 `taggings` (Associação Polimórfica)
+- Conecta `tags` a entidades diversas via:  
+  `taggable_type`, `taggable_id`  
+- Exemplo: associar uma tag a uma `task`
+
+---
+
+### 🔄 Relações Importantes
+
+```plaintext
+User 1 ────< Board 1 ────< Column 1 ────< Task >──── Tagging >──── Tag
+                                           ^
+                                (polimorfismo via taggable_type/id)
+```
+
+![ToDoThatDiagram](https://github.com/user-attachments/assets/0a6ec213-3826-4a2b-8520-944567bb53d6)
+
 
 ---
 
 ## Autores
 
-- [Seu Nome Aqui]
+- [Gabriel Al-Samir Guimarães Sales](https://github.com/your-github-username)
 
 ---
 
@@ -108,4 +143,4 @@ Acompanhe visualmente como anda sua produtividade com gráficos simples e intuit
 
 ## Link da Aplicação
 
-[Clique aqui para acessar a aplicação! 🚀](https://todo-do-project.onrender.com/)
+[Clique aqui para acessar a aplicação! 🚀](https://todothat.onrender.com)
