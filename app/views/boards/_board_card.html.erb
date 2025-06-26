@@ -1,4 +1,9 @@
-<div id="<%= dom_id(board) %>" class="card h-32 md:h-48 bg-base-100 shadow-sm transition hover:cursor-pointer hover:shadow-lg bg-base-200">
+<div id="<%= dom_id(board) %>"
+     class="relative card bg-base-100 shadow-sm transition hover:shadow-lg bg-base-200 pb-2"
+     data-controller="tag-editor board-actions modal"
+     data-taggable-id="<%= board.id %>"
+     data-taggable-type="Board">
+
   <figure class="h-18 overflow-hidden">
     <% if board.banner.present? %>
       <img src="data:image/*;base64,<%= board.banner %>" alt="<%= board.name %>" class="w-full h-full object-cover">
@@ -6,41 +11,50 @@
       <%= image_tag "default_image.jpg", alt: board.name, class: "w-full h-full object-cover" %>
     <% end %>
   </figure>
-  <div class="card-body p-4 md:p-6 flex justify-end">
-    <div>
-      <div class="flex justify-between items-end gap-6">
-        <div>
-          <h2 class="card-title"><%= board.name %></h2>
-          <% if board.description.present? %>
-            <p><%= board.description %></p>
-          <% end %>
-        </div>
-        <div class="flex flex-col items-end justify-end gap-2">
-          <div class="flex gap-2" data-controller="board-actions modal">
-            <label
-              for="edit-board-modal-<%= board.id %>"
-              class="z-10 text-gray-500 hover:text-info p-1 cursor-pointer"
-            >
-              <i class="fa-solid fa-pen-to-square"></i>
-            </label>
-            <button class="z-10 text-gray-500 hover:text-error p-1 cursor-pointer"
-        data-action="click->board-actions#confirmDelete click->board-actions#stopPropagation"
-              data-board-id="<%= board.id %>">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="w-full flex justify-end items-end mt-2 gap-2 flex-wrap">
-        <% board.tags.each do |tag| %>
-          <span class="badge badge-sm border-none" style="background-color: <%= tag.color %>">
-            <%= tag.title %>
-          </span>
+
+  <div class="card-body p-4 md:p-6 flex flex-col justify-between overflow-hidden">
+    <div class="flex justify-between items-start gap-4">
+      <div class="w-full overflow-hidden">
+      <h2 class="card-title text-sm md:text-base font-semibold leading-tight line-clamp-2 overflow-hidden">
+        <%= link_to board.name, board_path(board), class: "hover:underline" %>
+      </h2>
+
+        <% if board.description.present? %>
+          <p class="text-sm text-gray-400 line-clamp-2 mt-1 overflow-hidden">
+            <%= board.description %>
+          </p>
         <% end %>
+      </div>
+
+      <div class="flex flex-col items-end gap-2">
+        <div class="flex gap-2">
+          <label for="edit-board-modal-<%= board.id %>" class="z-10 text-gray-500 hover:text-info p-1 cursor-pointer">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </label>
+          <button class="z-10 text-gray-500 hover:text-error p-1 cursor-pointer"
+                  data-action="click->board-actions#confirmDelete click->board-actions#stopPropagation"
+                  data-board-id="<%= board.id %>">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+
+        <%= render "shared/tags/button", taggable: board %>
+      </div>
+    </div>
+
+    <div class="w-full mt-2 flex flex-col gap-1">
+      <div class="flex flex-wrap gap-1 items-center" id="board_tags_<%= board.id %>">
+        <% board.taggings.includes(:tag).each do |tagging| %>
+          <%= render "shared/tags/tag", tag: tagging.tag, taggable: board %>
+        <% end %>
+      </div>
+
+      <div class="flex justify-end items-center mt-2 gap-2">
+        <%= render "shared/tags/form", taggable: board %>
       </div>
     </div>
   </div>
-  <%= link_to "", board_path(board), class: "absolute inset-0" %>
+
   <%= render partial: 'boards/delete_board_modal', locals: { board: board } %>
   <div data-controller="modal">
     <%= render partial: 'boards/edit_board_modal', locals: { board: board } %>

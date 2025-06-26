@@ -26,6 +26,8 @@ gem "solid_cable"
 gem "bootsnap", require: false
 gem "kamal", require: false
 gem "thruster", require: false
+gem "acts_as_list", "~> 1.0"
+gem "dotenv-rails", groups: [ :development, :test, :production ]
 
 group :development, :test do
   gem "debug", require: "debug/prelude"
@@ -42,4 +44,5 @@ end
 group :test do
   gem "capybara"
   gem "selenium-webdriver"
+  gem "rails-controller-testing"
 end

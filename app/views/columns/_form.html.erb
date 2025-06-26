@@ -1,0 +1,24 @@
+<div id="new-column-form" data-controller="new-column">
+  <%= form_with model: [board, Column.new],
+                data: { action: "turbo:submit-end->new-column#resetForm" } do |f| %>
+    <div class="flex items-start md:items-center gap-4">
+      <div class="flex flex-col md:flex-row gap-2">
+        <%= f.text_field :name,
+                        placeholder: "Nome da coluna",
+                        class: "input input-sm input-bordered",
+                        data: {
+                          new_column_target: "input",
+                          action: "keydown->new-column#handleKeydown"
+                        } %>
+      </div>
+      <div class="flex gap-1">
+        <%= f.submit "Salvar", class: "btn btn-sm btn-primary" %>
+        <button type="button"
+                class="btn btn-sm btn-ghost"
+                data-action="click->new-column#cancel">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  <% end %>
+</div>

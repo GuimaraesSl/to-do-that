@@ -1,0 +1,48 @@
+<div id="<%= dom_id(task) %>" 
+     data-task-id="<%= task.id %>"
+     data-column-id="<%= task.column_id %>"
+     class="p-4 rounded-md bg-base-300 shadow-sm transition border border-base-200 hover:shadow-md hover:border-base-300 relative task-card task"
+     data-controller="task-actions tag-editor"
+     data-taggable-id="<%= task.id %>"
+     data-taggable-type="Task">
+
+
+  <button class="absolute top-2 right-2 text-sm text-gray-500 hover:text-error p-1"
+          data-action="click->task-actions#confirmDelete click->task-actions#stopPropagation">
+    <i class="fa-solid fa-trash"></i>
+  </button>
+
+  <div class="flex flex-col gap-2 pr-6">
+    <p class="hover:cursor-pointer text-base font-medium break-words transition"
+       data-action="click->task-actions#showTask">
+      <%= task.title %>
+    </p>
+
+    <% if task.due_date.present? %>
+      <p class="text-xs text-gray-400">
+        <i class="fa-regular fa-calendar"></i> <%= task.due_date_formatted %>
+      </p>
+    <% end %>
+
+    <p class="text-xs text-gray-400">
+      <i class="fa-solid fa-flag"></i> Prioridade: <%= task.priority %>
+    </p>
+
+    <div class="flex flex-wrap gap-1 mt-1 items-center" id="task_tags_<%= task.id %>">
+      <% task.taggings.includes(:tag).each do |tagging| %>
+        <%= render "shared/tags/tag", tag: tagging.tag, taggable: task %>
+      <% end %>
+    </div>
+
+    <div class="flex justify-end items-center mt-1 gap-2">
+      <%= render "shared/tags/form", taggable: task %>
+      <%= render "shared/tags/button", taggable: task %>
+    </div>
+    
+    <div class="flex justify-end items-center mt-2">
+      <span class="text-xs text-gray-500">
+        Dificuldade: <strong><%= task.difficulty %></strong>
+      </span>
+    </div>
+  </div>
+</div>

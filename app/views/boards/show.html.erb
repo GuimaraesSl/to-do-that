@@ -12,36 +12,28 @@
       <% end %>
     </div>
     <header class="py-2">
-      <h1 class="text-2xl font-bold text-gray-800"><%= @board.name %></h1>
+      <h1 class="text-2xl font-bold"><%= @board.name %></h1>
     </header>
     <div class="flex items-end md:justify-between flex-col-reverse md:flex-row gap-3">
-      <div data-controller="column-creator" class="flex justify-between items-center">
-        <div id="column-creator-actions" data-column-creator-target="button" class="flex flex-col md:flex-row gap-4">
-          <button class="btn flex btn-accent gap-2" 
-                  data-action="click->column-creator#showForm"
-            >
+      <div data-controller="column-creator" class="flex flex-col md:flex-row items-center gap-2">
+        <div data-column-creator-target="button">
+          <button class="btn flex btn-primary gap-2" 
+                  data-action="click->column-creator#showForm">
             <i class="fa-solid fa-plus"></i>
             <p>Nova coluna</p>
           </button>
         </div>
-        <div class="hidden" data-column-creator-target="form">
-          <%
-=begin%>
- <%= render 'columns/form', board: @board %> 
-<%
-=end%>
+
+        <div class="hidden w-full" data-column-creator-target="form">
+          <%= render 'columns/form', board: @board %> 
         </div>
       </div>
     </div>
   </div>
   <div id="board-columns" 
-    class="flex flex-col md:flex-row gap-4 overflow-x-auto pb-4 w-full" 
+    class="flex flex-row gap-4 overflow-x-auto p-4 w-full items-start"
     data-controller="horizontal-scroll"
-    style="scrollbar-width: thin;">
-    <%
-=begin%>
- <%= render partial: 'columns/column', collection: @board.columns.order(:position) %> 
-<%
-=end%>
+    style="scrollbar-width: thin; overflow-y: hidden;">
+    <%= render partial: 'columns/column', collection: @board.columns.order(:position) %> 
   </div>
 </div>

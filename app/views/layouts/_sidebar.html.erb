@@ -9,13 +9,44 @@
           data-turbo-permanent>
     <i class="fas fa-arrow-left" data-sidebar-target="icon"></i>
   </button>
+
+
+
   <div class="mt-16" data-sidebar-target="content">
     <h2 class="text-2xl font-bold mb-6 text-center">ToDoThat</h2>
-    <ul class="menu menu-compact">
-      <li><%= link_to "Home", home_path, class: "text-lg hover:bg-base-300 rounded" %></li>
-      <li>
-        <%= link_to "Boards", boards_path, class: "text-lg hover:bg-base-300 rounded" %>
+
+    <div class="mt-16 flex flex-col items-center text-center px-4">
+      <% if current_user.avatar_url.present? %>
+        <%= image_tag "https://images.weserv.nl/?url=#{CGI.escape(current_user.avatar_url)}", alt: "Avatar", class: "w-16 h-16 rounded-full mb-2 object-cover", loading: "lazy", data: { cache: true } %>
+      <% else %>
+        <div class="w-16 h-16 mb-2 rounded-full bg-base-300 flex items-center justify-center text-base-content text-2xl">
+          <i class="fas fa-user"></i>
+        </div>
+      <% end %>
+      <p class="text-lg font-semibold">Olá,</p>
+      <p class="font-bold text-base-content mb-4"><%= current_user.full_name %></p>
+    </div>
+
+    <ul class="menu menu-compact w-full px-2">
+      <li class="w-full">
+        <%= link_to home_path, class: "text-lg hover:bg-base-300 rounded flex items-center gap-3 w-full px-3 py-2" do %>
+          <i class="fa-solid fa-house"></i>
+          <span>Home</span>
+        <% end %>
+      </li>
+      <li class="w-full">
+        <%= link_to boards_path, class: "text-lg hover:bg-base-300 rounded flex items-center gap-3 w-full px-3 py-2" do %>
+          <i class="fa-solid fa-table-columns"></i>
+          <span>Boards</span>
+        <% end %>
       </li>
     </ul>
+
+    <div class="absolute bottom-6 left-0 w-full px-4">
+      <%= button_to destroy_user_session_path, method: :delete, class: "btn btn-outline btn-error w-full flex items-center gap-3 justify-center" do %>
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      <% end %>
+    </div>
   </div>
 </aside>

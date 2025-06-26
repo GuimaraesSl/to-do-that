@@ -1,0 +1,19 @@
+<% if params[:from_home] %>
+  <%= turbo_stream.remove "home_task_#{dom_id(@task)}" %>
+<% else %>
+  <%= turbo_stream.remove @task %>
+
+  <% if @old_column.tasks.reload.none? %>
+    <%= turbo_stream.replace dom_id(@old_column) do %>
+      <%= render partial: "columns/column", locals: { column: @old_column, column_counter: nil, column_iteration: nil } %>
+    <% end %>
+  <% end %>
+
+  <%= turbo_stream.append "column_#{@new_column.id}_tasks" do %>
+    <%= render partial: "tasks/task", locals: { task: @task } %>
+  <% end %>
+
+  <% if @new_column.tasks.count == 1 %>
+    <%= turbo_stream.remove "no_tasks_text_#{@new_column.id}" %>
+  <% end %>
+<% end %>

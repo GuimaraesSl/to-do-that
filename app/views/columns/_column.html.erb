@@ -1,0 +1,16 @@
+<div
+  id="<%= dom_id(column) %>" 
+  data-column-id="<%= column.id %>"
+  data-board-id="<%= column.board_id %>"
+  class="w-72 shrink-0 min-h-80 mb-4 rounded-xl p-4 shadow-md bg-base-200 hover:shadow-xl transition-all border-l-4 <%= column.is_done_column ? 'border-success' : 'border-[#264d91]' %>"
+  data-controller="column-editor column-settings"
+  data-column-settings-board-id-value="<%= column.board_id %>"
+  data-column-settings-column-id-value="<%= column.id %>"
+  data-column-settings-current-position-value="<%= column.position %>"
+>
+  <%= render 'columns/column_header', column: column %>
+  <%= render 'tasks/tasks_container', column: column %>
+  <%= render 'columns/column_delete_modal', column: column %>
+  <%= render 'tasks/task_new_modal', column: column %>
+  <%= render 'tasks/task_delete_modal', column: column %>
+</div>

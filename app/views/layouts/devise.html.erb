@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="custom-dark">
   <head>
-    <title>To-Do List - <%= yield(:title) %></title>
+    <title>ToDoThat - <%= yield(:title) %></title>
     <%= csrf_meta_tags %>
-    <%= csp_meta_tags %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
-  <body class="flex items-center justify-center min-h-screen">
-    <div class="card w-full max-w-md bg-base-100 shadow-xl p-6">
-      <%= yield %>
+
+  <body class="min-h-screen bg-base-200 text-base-content flex flex-col items-center">
+
+    <div class="pt-40">
+      <h1 class="text-5xl font-bold tracking-wide drop-shadow-sm text-center">
+        ToDoThat
+      </h1>
     </div>
+
+    <main class="flex-grow flex items-center justify-center w-full">
+      <%= yield %>
+    </main>
+
   </body>
 </html>

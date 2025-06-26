@@ -5,6 +5,11 @@ module.exports = {
     './app/javascript/**/*.js'
   ],
   safelist: [
+    'line-clamp-1',
+    'line-clamp-2',
+    'line-clamp-3',
+    'text-gray-400',
+    'text-gray-500',
     'bg-base-100',
     'bg-base-200',
     'bg-base-300',
@@ -14,14 +19,17 @@ module.exports = {
   theme: {
     extend: {}
   },
-  plugins: [require('daisyui')],
+  plugins: [
+    require('daisyui'),
+    require('@tailwindcss/line-clamp'),
+  ],
   daisyui: {
     themes: [
       {
         'custom-dark': {
           'primary': '#570df8',
           'secondary': '#f000b8',
-          'accent': '#37cdbe',
+          'accent': '#05317d',
           'neutral': '#3d4451',
           'base-100': '#01040a',
           'base-200': '#1a1f26',
@@ -31,8 +39,7 @@ module.exports = {
           'warning': '#fbbd23',
           'error': '#f87272',
         },
-      },
-      'cupcake', 'synthwave', 'black', 'business', 'night', 'coffee', 'abyss', 'nord',
+      }
     ]
   }
 }

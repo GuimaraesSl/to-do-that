@@ -1,0 +1,12 @@
+<%= turbo_stream.append "board-columns" do %>
+  <%= render partial: "columns/column", locals: { column: @column } %>
+<% end %>
+
+<% if @column.is_done_column && @board.columns.where(is_done_column: true).count == 1 %>
+  <%= turbo_stream.remove "done-column-alert" %>
+<% end %>
+
+<% previous_done = @board.columns.where.not(id: @column.id).order(:position).last %>
+<% if previous_done.present? && previous_done.is_done_column == false %>
+  <%= turbo_stream.replace dom_id(previous_done), partial: "columns/column", locals: { column: previous_done } %>
+<% end %>
