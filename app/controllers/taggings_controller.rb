@@ -1,6 +1,11 @@
 class TaggingsController < ApplicationController
   before_action :set_taggable, only: [ :create, :destroy ]
 
+  ALLOWED_TAGGABLE_TYPES = {
+    "Board" => Board,
+    "Task" => Task
+  }.freeze
+
   def create
     @tag = Tag.find_or_create_by(title: params[:tag][:title]) do |tag|
       tag.color = params[:tag][:color] || "#3b82f6"
@@ -74,12 +79,22 @@ class TaggingsController < ApplicationController
   private
 
   def set_taggable
-    @taggable = if params[:taggable_type].present?
-                  params[:taggable_type].constantize.find(params[:taggable_id])
+    klass, id = extract_taggable_info
+
+    return head :bad_request unless klass && ALLOWED_TAGGABLE_TYPES.key?(klass)
+
+    @taggable = ALLOWED_TAGGABLE_TYPES[klass].find(id)
+  end
+
+  private
+
+  def extract_taggable_info
+    if params[:taggable_type].present? && params[:taggable_id].present?
+      [ params[:taggable_type], params[:taggable_id] ]
     elsif params[:tagging]
-                  params[:tagging][:taggable_type].constantize.find(params[:tagging][:taggable_id])
+      [ params[:tagging][:taggable_type], params[:tagging][:taggable_id] ]
     elsif @tagging
-                  @tagging.taggable
+      [ @tagging.taggable_type, @tagging.taggable_id ]
     end
   end
 
