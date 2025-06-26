@@ -5,9 +5,3 @@ one:
   position: 1
   is_done_column: false
   board: one
-
-two:
-  name: MyString
-  position: 1
-  is_done_column: false
-  board: two

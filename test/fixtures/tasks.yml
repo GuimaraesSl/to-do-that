@@ -9,13 +9,3 @@ one:
   concluded_at: 2025-06-23 18:13:37
   position: 1
   column: one
-
-two:
-  title: MyString
-  description: MyText
-  difficulty: 1
-  priority: 1
-  due_date: 2025-06-23 18:13:37
-  concluded_at: 2025-06-23 18:13:37
-  position: 1
-  column: two

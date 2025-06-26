@@ -9,7 +9,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   test "should get index with metrics" do
     get root_path
     assert_response :success
-    assert_select "h1", text: "ToDoThat"
+    assert_select "h1", text: "Como Estou Indo"
 
     assert assigns(:metrics)
     assert assigns(:tasks_due_today)

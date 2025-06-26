@@ -5,9 +5,3 @@ one:
   description: MyText
   banner: MyText
   user: one
-
-two:
-  name: MyString
-  description: MyText
-  banner: MyText
-  user: two
