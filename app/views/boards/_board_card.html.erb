@@ -4,20 +4,19 @@
      data-taggable-id="<%= board.id %>"
      data-taggable-type="Board">
 
-  <figure class="h-18 overflow-hidden">
-    <% if board.banner.present? %>
-      <img src="data:image/*;base64,<%= board.banner %>" alt="<%= board.name %>" class="w-full h-full object-cover">
-    <% else %>
-      <%= image_tag "default_image.jpg", alt: board.name, class: "w-full h-full object-cover" %>
-    <% end %>
-  </figure>
+  <%= link_to board_path(board), class: "block" do %>
+    <figure class="h-24 overflow-hidden cursor-pointer rounded-t-md">
+      <div class="p-8 w-full h-full bg-[#274472] flex items-center">
+        <h2 class="text-xl font-bold text-white leading-tight line-clamp-2 px-4 w-full">
+          <%= board.name %>
+        </h2>
+      </div>
+    </figure>
+  <% end %>
 
   <div class="card-body p-4 md:p-6 flex flex-col justify-between overflow-hidden">
     <div class="flex justify-between items-start gap-4">
       <div class="w-full overflow-hidden">
-      <h2 class="card-title text-sm md:text-base font-semibold leading-tight line-clamp-2 overflow-hidden">
-        <%= link_to board.name, board_path(board), class: "hover:underline" %>
-      </h2>
 
         <% if board.description.present? %>
           <p class="text-sm text-gray-400 line-clamp-2 mt-1 overflow-hidden">
@@ -42,7 +41,7 @@
       </div>
     </div>
 
-    <div class="w-full mt-2 flex flex-col gap-1">
+    <div class="w-full flex flex-col gap-1">
       <div class="flex flex-wrap gap-1 items-center" id="board_tags_<%= board.id %>">
         <% board.taggings.includes(:tag).each do |tagging| %>
           <%= render "shared/tags/tag", tag: tagging.tag, taggable: board %>

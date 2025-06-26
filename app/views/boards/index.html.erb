@@ -2,7 +2,7 @@
 <div class="container mx-auto">
   <h1 class="text-4xl font-bold mb-6">Meus Boards</h1>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     <%= render partial: 'boards/board_card', collection: @boards, as: :board %>
     <%= render 'boards/new_board_button' %>
   </div>

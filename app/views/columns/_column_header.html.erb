@@ -1,31 +1,15 @@
 <div class="flex items-center justify-between mb-2">
-  <div>
+  <div class="flex items-center gap-2">
     <%= render 'columns/column_editor', column: column %>
   </div>
 
-  <div class="flex gap-2 items-center">
-    <div class="dropdown dropdown-end">
-      <button tabindex="0" class="btn btn-circle btn-sm btn-ghost" data-column-settings-target="settingsButton">
-        <i class="fa-solid fa-ellipsis-vertical text-lg text-accent"></i>
-      </button>
-      <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-300 rounded-box w-fit mr-[-100px] flex items-center">
-        <li>
-          <a href="#" data-action="click->column-settings#confirmDelete" class="flex items-center gap-2 text-error font-semibold">
-            <i class="fa-solid fa-trash"></i> Excluir Coluna
-          </a>
-        </li>
-      </ul>
-
-    </div>
-
+  <div>
     <button
-      data-action="click->column-settings#showNewTaskModal"
-      data-modal-target="modal"
-      data-modal-id-param="new_task_modal_<%= column.id %>"
-      data-column-editor-target="newTaskButton"
-      class="btn btn-sm btn-accent text-white gap-2"
+      class="text-sm text-error hover:bg-error/10 transition p-2 rounded"
+      data-action="click->column-settings#confirmDelete"
+      title="Excluir coluna"
     >
-      <i class="fa-solid fa-plus"></i> Nova tarefa
+      <i class="fa-solid fa-trash"></i>
     </button>
   </div>
 </div>

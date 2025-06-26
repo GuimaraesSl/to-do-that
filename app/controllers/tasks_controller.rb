@@ -79,8 +79,10 @@ class TasksController < ApplicationController
   end
 
   def set_task
-    @task = @column.tasks.find(params[:id])
+    @task = current_user.boards.joins(columns: :tasks).merge(Task.where(id: params[:id])).first.tasks.find(params[:id])
+    @column = @task.column
   end
+
 
   def task_params
     params.require(:task).permit(:title, :description, :difficulty, :priority, :due_date, :position, tag_ids: [])
