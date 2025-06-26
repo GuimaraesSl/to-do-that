@@ -26,6 +26,8 @@ Com ele, você pode:
 
 A ideia central do ToDoThat é que você tenha controle e clareza sobre o que precisa fazer, sem complicações, com uma interface intuitiva e recursos que realmente fazem diferença na hora de se organizar.
 
+[Veja meu GitHub Projects com as ideias que ainda tenho!! ✍️](https://github.com/users/GuimaraesSl/projects/1/views/1)
+
 ---
 
 ## 🛠️ Decisões Técnicas
