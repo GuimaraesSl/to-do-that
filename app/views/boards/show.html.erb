@@ -1,39 +1,32 @@
-<div class="full-width-container">
+<div class="full-width-container p-16">
   <div class="flex flex-col gap-4 pt-4 mb-4">
-    <div class="w-full h-32 md:h-48 overflow-hidden">
-      <% if @board.banner.present? %>
-        <img  src="data:image/*;base64,<%= @board.banner %>"
-              alt="<%= @board.name %>"
-              class="w-full h-full object-cover rounded-lg">
-      <% else %>
-        <%= image_tag "default_image.jpg",
-                      alt: @board.name,
-                      class: "w-full h-full object-cover rounded-lg" %>
-      <% end %>
-    </div>
     <header class="py-2">
       <h1 class="text-2xl font-bold"><%= @board.name %></h1>
     </header>
-    <div class="flex items-end md:justify-between flex-col-reverse md:flex-row gap-3">
-      <div data-controller="column-creator" class="flex flex-col md:flex-row items-center gap-2">
-        <div data-column-creator-target="button">
-          <button class="btn flex btn-primary gap-2" 
-                  data-action="click->column-creator#showForm">
-            <i class="fa-solid fa-plus"></i>
-            <p>Nova coluna</p>
-          </button>
-        </div>
-
-        <div class="hidden w-full" data-column-creator-target="form">
-          <%= render 'columns/form', board: @board %> 
-        </div>
-      </div>
-    </div>
   </div>
+
   <div id="board-columns" 
-    class="flex flex-row gap-4 overflow-x-auto p-4 w-full items-start"
-    data-controller="horizontal-scroll"
-    style="scrollbar-width: thin; overflow-y: hidden;">
+       class="flex flex-row gap-4 overflow-x-auto p-4 w-full items-start"
+       data-controller="horizontal-scroll"
+       style="scrollbar-width: thin; overflow-y: hidden;">
     <%= render partial: 'columns/column', collection: @board.columns.order(:position) %> 
+  </div>
+</div>
+
+<div data-controller="column-creator"
+     class="fixed top-24 right-32 z-50">
+  
+  <div data-column-creator-target="button">
+    <button class="btn btn-primary shadow-lg rounded-full w-14 h-14 flex items-center justify-center text-xl"
+            title="Nova coluna"
+            data-action="click->column-creator#showForm">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+  </div>
+
+  <div class="hidden mt-3" data-column-creator-target="form">
+    <div class="bg-base-100 rounded-lg shadow-xl p-4 w-80">
+      <%= render 'columns/form', board: @board %>
+    </div>
   </div>
 </div>
