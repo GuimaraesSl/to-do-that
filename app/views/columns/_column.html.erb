@@ -9,6 +9,7 @@
   data-column-settings-current-position-value="<%= column.position %>"
 >
   <%= render 'columns/column_header', column: column %>
+  <%= render 'columns/add_new_task', column: column %>
   <%= render 'tasks/tasks_container', column: column %>
   <%= render 'columns/column_delete_modal', column: column %>
   <%= render 'tasks/task_new_modal', column: column %>

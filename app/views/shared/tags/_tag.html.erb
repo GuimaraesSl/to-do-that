@@ -2,7 +2,7 @@
      class="badge badge-sm inline-flex items-center group" 
      style="background-color: <%= tag.color %>; color: white;">
   <%= tag.title %>
-  <button class="ml-1 text-xs hover:text-error transition-colors"
+  <button class="ml-1 text-xs hover:text-error transition-colors cursor-pointer"
           data-action="click->tag-editor#removeTag"
           data-tagging-id="<%= taggable.taggings.find_by(tag: tag).id %>"
           title="Remover tag">

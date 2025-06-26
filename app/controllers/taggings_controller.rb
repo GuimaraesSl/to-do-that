@@ -1,5 +1,5 @@
 class TaggingsController < ApplicationController
-  before_action :set_taggable, only: [ :create, :destroy ]
+  before_action :set_taggable, only: [ :create ]
 
   ALLOWED_TAGGABLE_TYPES = {
     "Board" => Board,
