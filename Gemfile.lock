@@ -194,7 +194,7 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.12.2)
-    jwt (2.10.1)
+    jwt (2.10.2)
       base64
     kamal (2.7.0)
       activesupport (>= 7.0)
@@ -510,7 +510,7 @@ DEPENDENCIES
   htmlbeautifier
   importmap-rails
   jbuilder
-  jwt (~> 2.6)
+  jwt (~> 2.10)
   kamal
   omniauth
   omniauth-google-oauth2
